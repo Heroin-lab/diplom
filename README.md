@@ -1,1 +1,7 @@
-This project was fully developed by Serkin Kirill!
+# nixProject
+
+## Project setup
+```
+make
+```
+
