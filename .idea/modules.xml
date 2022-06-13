@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/diplom.iml" filepath="$PROJECT_DIR$/.idea/diplom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/serkin-taxiapp.iml" filepath="$PROJECT_DIR$/.idea/serkin-taxiapp.iml" />
     </modules>
   </component>
 </project>

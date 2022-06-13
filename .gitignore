@@ -17,3 +17,6 @@ vendor/
 # IDE directories
 *.vscode
 *.idea
+.env
+
+taxi_service
