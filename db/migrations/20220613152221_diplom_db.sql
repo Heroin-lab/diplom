@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS offenses(
    id SERIAL PRIMARY KEY,
    user_id INT NOT NULL,
    crime_code_id INT NOT NULL,
-   longitude VARCHAR(32),
-   latitude VARCHAR(32),
+   longitude VARCHAR(1024),
+   latitude VARCHAR(1024),
    time timestamp default current_timestamp,
    description TEXT,
    CONSTRAINT fk_id_user_id

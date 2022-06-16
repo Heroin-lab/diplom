@@ -32,24 +32,29 @@ func NewAuthService(repo repositories.Authorization) *AuthService {
 
 func (s *AuthService) CreateUser(user request.User) (int, error) {
 	newUser := repositories.User{
-		Login:    user.Login,
-		Password: user.Password,
+		FirstName:   user.FirstName,
+		SecondName:  user.SecondName,
+		Patronymic:  user.Patronymic,
+		PhoneNumber: user.PhoneNumber,
+		Password:    user.Password,
 	}
 
 	newUser.Password = s.generatePasswordHash(user.Password)
 
 	userId, err := s.repo.CreateUser(newUser)
 	if err != nil && strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
-		logrus.Errorf("User with login '%s'  already exist!", newUser.Login)
+		logrus.Errorf("User with login '%s'  already exist!", newUser.PhoneNumber)
 		return 0, errors.New("User with this login already exist!")
 	}
 	return userId, err
 }
 
-func (s *AuthService) GenerateToken(login string, password string, duration int) (string, error) {
-	user, err := s.repo.GetUserByLogin(login, s.generatePasswordHash(password))
+func (s *AuthService) GenerateToken(phoneNum string, password string, duration int) (string, int, error) {
+	var signedString string
+
+	user, err := s.repo.GetUserByPhoneNumber(phoneNum, s.generatePasswordHash(password))
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
@@ -57,10 +62,15 @@ func (s *AuthService) GenerateToken(login string, password string, duration int)
 			ExpiresAt: time.Now().Add(time.Minute * time.Duration(duration)).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
-		user.User_id,
+		user.Id,
 	})
 
-	return token.SignedString([]byte(signingKey))
+	signedString, err = token.SignedString([]byte(signingKey))
+	if err != nil {
+		return "", 0, err
+	}
+
+	return signedString, user.Id, nil
 }
 
 func (s *AuthService) ParseToken(accessToken string) (int, error) {

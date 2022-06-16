@@ -9,7 +9,7 @@ import (
 
 const (
 	usersTable         = "users"
-	ordersTable        = "orders"
+	offensesTable      = "offenses"
 	ordersHistoryTable = "orders_history"
 	statusesTable      = "statuses"
 	cabMansTable       = "cab_mans"

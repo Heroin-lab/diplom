@@ -11,7 +11,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user request.User) (int, error)
-	GenerateToken(login string, password string, duration int) (string, error)
+	GenerateToken(phone string, password string, duration int) (string, int, error)
 	ParseToken(token string) (int, error)
 }
 
@@ -30,17 +30,26 @@ type OrdersServices interface {
 	CreateNewLocationRow(lat string, lon string, orderId int) error
 }
 
+type OffensesServices interface {
+	GetAllUserOffenses(uId string) ([]repositories.Offense, error)
+	CreateUserOffense(offense repositories.Offense) (int, error)
+	UpdateUserOffense(offense repositories.Offense) (int, error)
+	DeleteUserOffense(offenseId string) (int, error)
+}
+
 type Services struct {
 	Authorization
 	CabMansServices
 	OrdersServices
+	OffensesServices
 }
 
 func NewServices(repos *repositories.Repositories) *Services {
 	return &Services{
-		Authorization:   NewAuthService(repos.Authorization),
-		CabMansServices: NewCabManService(repos.CabMansRepository),
-		OrdersServices:  NewOrdersService(repos.OrdersRepository),
+		Authorization:    NewAuthService(repos.Authorization),
+		CabMansServices:  NewCabManService(repos.CabMansRepository),
+		OrdersServices:   NewOrdersService(repos.OrdersRepository),
+		OffensesServices: NewOffensesService(repos.OffenseRepository),
 	}
 }
 
